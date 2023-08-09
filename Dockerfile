@@ -1,7 +1,17 @@
-FROM golang:1.9.2
+FROM golang:alpine AS builder
 
-ADD . /go/src/myapp
-WORKDIR /go/src/myapp
-RUN go get myapp
-RUN go install
-ENTRYPOINT ["/go/bin/myapp"]
+WORKDIR /build
+
+ADD go.mod .
+
+COPY . .
+
+RUN go build -o main main.go
+
+FROM alpine
+
+WORKDIR /build
+
+COPY --from=builder /build/main /build/main
+
+CMD [". /main"]
