@@ -13,4 +13,4 @@ COPY main.go .
 RUN go mod -o /godocker
 
 
-CMD [ “/godocker” ]
+CMD ["/godocker" ]
