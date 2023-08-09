@@ -1,9 +1,7 @@
-FROM golang:1.19
+FROM golang:1.9.2
 
-WORKDIR /go/src/app
-COPY . .
-
-RUN go get -d -v ./...
-RUN go install -v ./...
-
-CMD ["app"]
+ADD . /go/src/myapp
+WORKDIR /go/src/myapp
+RUN go get myapp
+RUN go install
+ENTRYPOINT ["/go/bin/myapp"]
