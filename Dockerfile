@@ -3,7 +3,7 @@ FROM golang:1.19
 WORKDIR /app
 
 # Effectively tracks changes within your go.mod file
-COPY go.mod .
+COPY go.mod go.sum ./
 
 RUN go mod download
 
