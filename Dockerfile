@@ -8,9 +8,8 @@ COPY go.mod .
 RUN go mod download
 
 # Copies your source code into the app directory
-COPY
-Learn more about the "COPY" Dockerfile command.
- *.go ./
+COPY *.go ./
+
 
 # Build
 RUN CGO_ENABLED=0 GOOS=linux go build -o /godocker
