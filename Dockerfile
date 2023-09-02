@@ -10,7 +10,7 @@ WORKDIR /build
 
 ADD go.mod .
 ADD go.sum .
-RUN go mod download
+RUN go mod download -x
 COPY . .
 RUN go build -ldflags="-s -w" -o /app/main main.go
 
