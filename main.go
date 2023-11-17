@@ -16,7 +16,7 @@ func main() {
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
 	}
 
-	db, err := sqlx.Open("mysql", "root:dCmd5e5A6hUN8Yv@(193.109.84.90:3306)/leomine_schema")
+	db, err := sqlx.Open("mysql", "u2333338_root:Y3S4G9taZvwsYtU2@(31.31.196.165:3306)/u2333338_some")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
