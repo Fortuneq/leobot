@@ -18,6 +18,7 @@ func main() {
 
 	db, err := sqlx.Open("mysql", "u2333338_root:Y3S4G9taZvwsYtU2@(31.31.196.165:3306)/u2333338_some")
 	if err != nil {
+
 		log.Fatal(err.Error())
 	}
 	defer db.Close()
