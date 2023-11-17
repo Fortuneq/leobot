@@ -316,7 +316,7 @@ func Handle(b *tele.Bot, repo *repository.IndexRepository) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		keyboardDevice(state, c, b)
+		keyboardDevice(state, c, b, repo)
 		return nil
 	})
 
@@ -572,7 +572,7 @@ func Handle(b *tele.Bot, repo *repository.IndexRepository) {
 	b.Handle(tele.OnText, func(c tele.Context) error {
 		switch {
 		case state.FSM.Current() == EditDevice:
-			keyboardDevice(state, c, b)
+			keyboardDevice(state, c, b, repo)
 		case state.FSM.Current() == editDeviceID:
 			id = c.Text()
 			err := state.FSM.Event(context.Background(), PreviousState)
@@ -634,14 +634,6 @@ func Handle(b *tele.Bot, repo *repository.IndexRepository) {
 			}
 		case state.FSM.Current() == EditDeviceCost:
 			err := repo.EditDeviceCost(context.Background(), id, c.Text())
-			if err != nil {
-				c.Send(err.Error())
-				return err
-			} else {
-				c.Send("Успешно")
-			}
-		case state.FSM.Current() == EditDevicePopularity:
-			err := repo.EditDevicePopularity(context.Background(), id)
 			if err != nil {
 				c.Send(err.Error())
 				return err
@@ -1263,7 +1255,7 @@ func keyboardCase(state *Chat, c tele.Context, b *tele.Bot) {
 	})
 }
 
-func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot) {
+func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot, repo *repository.IndexRepository) {
 	menu := &tele.ReplyMarkup{ResizeKeyboard: true}
 	btnAlgorithm := menu.Text("Алгоритм: 🧮")
 	btnName := menu.Text("Имя: 📛")
@@ -1313,9 +1305,12 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		PreviousState = EditDevicePopularity
-
-		return c.Send("напиши мне айди девайса , для которого меняется параметр популярности")
+		err = repo.EditDevicePopularity(context.Background(), id)
+		if err != nil {
+			return c.Send(err.Error())
+		} else {
+			return c.Send("Успешно")
+		}
 	})
 
 	b.Handle(&btnHashrate, func(c tele.Context) error {
