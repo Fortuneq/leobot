@@ -641,7 +641,7 @@ func Handle(b *tele.Bot, repo *repository.IndexRepository) {
 				c.Send("Успешно")
 			}
 		case state.FSM.Current() == EditDevicePopularity:
-			err := repo.EditDeviceCost(context.Background(), id, c.Text())
+			err := repo.EditDevicePopularity(context.Background(), id)
 			if err != nil {
 				c.Send(err.Error())
 				return err
@@ -1308,7 +1308,7 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot) {
 
 		return c.Send("напиши мне айди девайса , стоимость которого меняешь")
 	})
-	b.Handle(&btnCost, func(c tele.Context) error {
+	b.Handle(&btnPoplura, func(c tele.Context) error {
 		err := state.FSM.Event(context.Background(), editDeviceID)
 		if err != nil {
 			fmt.Println(err)

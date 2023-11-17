@@ -114,7 +114,7 @@ func (r *IndexRepository) EditDeviceCost(ctx context.Context, id, cost string) e
 	return nil
 }
 
-func (r *IndexRepository) EditDevicePopularity(ctx context.Context, id int) error {
+func (r *IndexRepository) EditDevicePopularity(ctx context.Context, id string) error {
 	//Абстрактный sql ,  с которого получаем данные
 	s := "SELECT recommended from devices where id = ?"
 	variable := 0
