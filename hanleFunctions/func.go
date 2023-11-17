@@ -1265,16 +1265,16 @@ func keyboardCase(state *Chat, c tele.Context, b *tele.Bot) {
 
 func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot) {
 	menu := &tele.ReplyMarkup{ResizeKeyboard: true}
-	btnAlgorithm := menu.Text("Алгоритм")
-	btnName := menu.Text("Имя")
-	btnSize := menu.Text("Размер")
-	btnCost := menu.Text("Стоимость")
-	btnPoplura := menu.Text("Популярность")
-	btnImage := menu.Text("Изображение")
-	btnHashrate := menu.Text("Хэшрейт")
-	btnVideoUrl := menu.Text("Ссылка на видео")
-	btnPower := menu.Text("Потребление")
-	btnUid := menu.Text("UID")
+	btnAlgorithm := menu.Text("Алгоритм: 🧮")
+	btnName := menu.Text("Имя: 📛")
+	btnSize := menu.Text("Размер: 📏")
+	btnCost := menu.Text("Стоимость: 💰")
+	btnPoplura := menu.Text("Популярность: 👍")
+	btnImage := menu.Text("Изображение: 🖼️")
+	btnHashrate := menu.Text("Хэшрейт: ⛏️")
+	btnVideoUrl := menu.Text("Ссылка на видео: 📺")
+	btnPower := menu.Text("Потребление: ⚡")
+	btnUid := menu.Text("UID: 🔑")
 
 	menu.Reply(
 		menu.Row(btnAlgorithm),
