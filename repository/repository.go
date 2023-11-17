@@ -118,7 +118,7 @@ func (r *IndexRepository) EditDevicePopularity(ctx context.Context, id string) e
 	//Абстрактный sql ,  с которого получаем данные
 	s := "SELECT recommended from devices where id = ?"
 	variable := 0
-	err := r.db.SelectContext(ctx, &variable, s)
+	err := r.db.SelectContext(ctx, &variable, s, id)
 	if err != nil {
 		println(err)
 		return err
