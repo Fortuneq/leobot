@@ -1261,7 +1261,6 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot, repo *repository.I
 	btnName := menu.Text("Имя: 📛")
 	btnSize := menu.Text("Размер: 📏")
 	btnCost := menu.Text("Стоимость: 💰")
-	btnPoplura := menu.Text("Популярность: 👍")
 	btnImage := menu.Text("Изображение: 🖼️")
 	btnHashrate := menu.Text("Хэшрейт: ⛏️")
 	btnVideoUrl := menu.Text("Ссылка на видео: 📺")
@@ -1274,7 +1273,6 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot, repo *repository.I
 		menu.Row(btnSize),
 		menu.Row(btnCost),
 		menu.Row(btnImage),
-		menu.Row(btnPoplura),
 		menu.Row(btnHashrate),
 		menu.Row(btnVideoUrl),
 		menu.Row(btnPower),
@@ -1299,18 +1297,6 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot, repo *repository.I
 		PreviousState = EditDeviceCost
 
 		return c.Send("напиши мне айди девайса , стоимость которого меняешь")
-	})
-	b.Handle(&btnPoplura, func(c tele.Context) error {
-		err := state.FSM.Event(context.Background(), editDeviceID)
-		if err != nil {
-			fmt.Println(err)
-		}
-		err = repo.EditDevicePopularity(context.Background(), id)
-		if err != nil {
-			return c.Send(err.Error())
-		} else {
-			return c.Send("Успешно")
-		}
 	})
 
 	b.Handle(&btnHashrate, func(c tele.Context) error {
