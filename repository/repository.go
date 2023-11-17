@@ -114,6 +114,28 @@ func (r *IndexRepository) EditDeviceCost(ctx context.Context, id, cost string) e
 	return nil
 }
 
+func (r *IndexRepository) EditDevicePopularity(ctx context.Context, id int) error {
+	//Абстрактный sql ,  с которого получаем данные
+	s := "SELECT recommended from devices where id = ?"
+	variable := 0
+	err := r.db.SelectContext(ctx, &variable, s)
+	if err != nil {
+		println(err)
+		return err
+	}
+	q := "Update devices SET recommended = ? Where id = ?"
+	if variable == 0 {
+		variable = 1
+	} else {
+		variable = 0
+	}
+	_, err = r.db.ExecContext(ctx, q, id)
+	if err != nil {
+		println(err)
+		return err
+	}
+	return nil
+}
 func (r *IndexRepository) EditDeviceSize(ctx context.Context, id, size string) error {
 
 	//Абстрактный sql ,  с которого получаем данные

@@ -47,6 +47,7 @@ const (
 	editDeviceID              = "editDeviceId"
 	EditDeviceName            = "editDeviceName"
 	EditDeviceCost            = "editDeviceCost"
+	EditDevicePopularity      = "editDevicePopularity"
 	EditDeviceImage           = "editDeviceImage"
 	EditDeviceSize            = "editDeviceSize"
 	EditDevicePower           = "editDevicePower"
@@ -119,7 +120,7 @@ func NewChat(to string) *Chat {
 	}
 
 	deviceArr := []string{
-		EditDeviceAlgorithm, EditDeviceName, EditDevicePower, EditDeviceHashrate, EditDeviceSize, EditDeviceUid,
+		EditDeviceAlgorithm, EditDeviceName, EditDevicePower, EditDeviceHashrate, EditDevicePopularity, EditDeviceSize, EditDeviceUid,
 		EditDeviceCost, EditDeviceImage, EditDeviceVideoUrl, editDeviceID, EditDevice, EditArticle, EditArticleText, EditArticleName, EditArticleVideoUrl, EditArticleID, EditDevice, EditCaseText, EditCaseID, EditCase, EditCaseName, EditCaseVideoUrl,
 		"default", EditCompanyReviews, EditCompanyReviewsID, EditCompanyReviewsText, EditCompanyReviewsName, EditCompanyReviewsEmail, EditCompanyReviewsStars,
 		EditDeviceReviews, EditDeviceReviewsID, EditDeviceReviewsText, EditDeviceReviewsName, EditDeviceReviewsEmail, EditDeviceReviewsStars, EditDeviceReviewsAmount, EditDeviceReviewsDate, EditDeviceReviewsDeviceID,
@@ -180,6 +181,7 @@ func NewChat(to string) *Chat {
 			{Name: EditDeviceName, Src: deviceArr, Dst: EditDeviceName},
 			{Name: EditDevicePower, Src: deviceArr, Dst: EditDevicePower},
 			{Name: EditDeviceHashrate, Src: deviceArr, Dst: EditDeviceHashrate},
+			{Name: EditDevicePopularity, Src: deviceArr, Dst: EditDevicePopularity},
 			{Name: EditDeviceSize, Src: deviceArr, Dst: EditDeviceSize},
 			{Name: EditDeviceUid, Src: deviceArr, Dst: EditDeviceUid},
 			{Name: EditDeviceCost, Src: deviceArr, Dst: EditDeviceCost},
@@ -289,6 +291,11 @@ func Handle(b *tele.Bot, repo *repository.IndexRepository) {
 			c.Send(s)
 		}
 		return nil
+	})
+
+	b.Handle("/start", func(c tele.Context) error {
+
+		return c.Send("Данный бот создан для админов leomine для редактирования элементов сайта , команды можно посмотреть слева")
 	})
 
 	b.Handle("/get_device_reviews", func(c tele.Context) error {
@@ -626,6 +633,14 @@ func Handle(b *tele.Bot, repo *repository.IndexRepository) {
 				c.Send("Успешно")
 			}
 		case state.FSM.Current() == EditDeviceCost:
+			err := repo.EditDeviceCost(context.Background(), id, c.Text())
+			if err != nil {
+				c.Send(err.Error())
+				return err
+			} else {
+				c.Send("Успешно")
+			}
+		case state.FSM.Current() == EditDevicePopularity:
 			err := repo.EditDeviceCost(context.Background(), id, c.Text())
 			if err != nil {
 				c.Send(err.Error())
@@ -1254,6 +1269,7 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot) {
 	btnName := menu.Text("Имя")
 	btnSize := menu.Text("Размер")
 	btnCost := menu.Text("Стоимость")
+	btnPoplura := menu.Text("Популярность")
 	btnImage := menu.Text("Изображение")
 	btnHashrate := menu.Text("Хэшрейт")
 	btnVideoUrl := menu.Text("Ссылка на видео")
@@ -1266,6 +1282,7 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot) {
 		menu.Row(btnSize),
 		menu.Row(btnCost),
 		menu.Row(btnImage),
+		menu.Row(btnPoplura),
 		menu.Row(btnHashrate),
 		menu.Row(btnVideoUrl),
 		menu.Row(btnPower),
@@ -1290,6 +1307,15 @@ func keyboardDevice(state *Chat, c tele.Context, b *tele.Bot) {
 		PreviousState = EditDeviceCost
 
 		return c.Send("напиши мне айди девайса , стоимость которого меняешь")
+	})
+	b.Handle(&btnCost, func(c tele.Context) error {
+		err := state.FSM.Event(context.Background(), editDeviceID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		PreviousState = EditDevicePopularity
+
+		return c.Send("напиши мне айди девайса , для которого меняется параметр популярности")
 	})
 
 	b.Handle(&btnHashrate, func(c tele.Context) error {
