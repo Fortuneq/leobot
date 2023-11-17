@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"strconv"
 )
 
 type IndexRepository struct {
@@ -116,23 +117,25 @@ func (r *IndexRepository) EditDeviceCost(ctx context.Context, id, cost string) e
 
 func (r *IndexRepository) EditDevicePopularity(ctx context.Context, id string) error {
 	//Абстрактный sql ,  с которого получаем данные
-	type S struct {
-		recommended int `db:"recommended"`
-	}
-	var t S
+	str := ""
 	s := "SELECT recommended from devices where id = ?"
-	err := r.db.SelectContext(ctx, &t, s, id)
+	err := r.db.SelectContext(ctx, str, s, id)
 	if err != nil {
 		println(err)
 		return err
 	}
 	q := "Update devices SET recommended = ? Where id = ?"
-	if t.recommended == 0 {
-		t.recommended = 1
-	} else {
-		t.recommended = 0
+	i, err := strconv.ParseInt(str, 16, 32)
+	if err != nil {
+		println(err)
+		return err
 	}
-	_, err = r.db.ExecContext(ctx, q, id)
+	if i == 0 {
+		i = 1
+	} else {
+		i = 0
+	}
+	_, err = r.db.ExecContext(ctx, q, id, i)
 	if err != nil {
 		println(err)
 		return err
