@@ -116,18 +116,21 @@ func (r *IndexRepository) EditDeviceCost(ctx context.Context, id, cost string) e
 
 func (r *IndexRepository) EditDevicePopularity(ctx context.Context, id string) error {
 	//Абстрактный sql ,  с которого получаем данные
+	type S struct {
+		recommended int `db:"recommended"`
+	}
+	var t S
 	s := "SELECT recommended from devices where id = ?"
-	variable := 0
-	err := r.db.SelectContext(ctx, &variable, s, id)
+	err := r.db.SelectContext(ctx, &t, s, id)
 	if err != nil {
 		println(err)
 		return err
 	}
 	q := "Update devices SET recommended = ? Where id = ?"
-	if variable == 0 {
-		variable = 1
+	if t.recommended == 0 {
+		t.recommended = 1
 	} else {
-		variable = 0
+		t.recommended = 0
 	}
 	_, err = r.db.ExecContext(ctx, q, id)
 	if err != nil {
@@ -478,7 +481,7 @@ func (r *IndexRepository) EditDeviceReviewsDeviceID(ctx context.Context, id, dev
 
 	//Абстрактный sql ,  с которого получаем данные
 
-	q := "Update device_reviews SET  deviceID = ? Where id = ?"
+	q := "Update device_reviews SET  device_id = ? Where id = ?"
 
 	_, err := r.db.ExecContext(ctx, q, deviceID, id)
 	if err != nil {
